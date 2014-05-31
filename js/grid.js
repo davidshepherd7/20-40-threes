@@ -1,5 +1,6 @@
-function Grid(size, previousState) {
-  this.size = size;
+function Grid(xsize, ysize, previousState) {
+  this.xsize = xsize;
+  this.ysize = ysize;
   this.cells = previousState ? this.fromState(previousState) : this.empty();
 }
 
@@ -7,10 +8,10 @@ function Grid(size, previousState) {
 Grid.prototype.empty = function () {
   var cells = [];
 
-  for (var x = 0; x < this.size; x++) {
+  for (var x = 0; x < this.xsize; x++) {
     var row = cells[x] = [];
 
-    for (var y = 0; y < this.size; y++) {
+    for (var y = 0; y < this.ysize; y++) {
       row.push(null);
     }
   }
@@ -21,10 +22,10 @@ Grid.prototype.empty = function () {
 Grid.prototype.fromState = function (state) {
   var cells = [];
 
-  for (var x = 0; x < this.size; x++) {
+  for (var x = 0; x < this.xsize; x++) {
     var row = cells[x] = [];
 
-    for (var y = 0; y < this.size; y++) {
+    for (var y = 0; y < this.ysize; y++) {
       var tile = state[x][y];
       row.push(tile ? new Tile(tile.position, tile.value) : null);
     }
@@ -56,8 +57,8 @@ Grid.prototype.availableCells = function () {
 
 // Call callback for every cell
 Grid.prototype.eachCell = function (callback) {
-  for (var x = 0; x < this.size; x++) {
-    for (var y = 0; y < this.size; y++) {
+  for (var x = 0; x < this.xsize; x++) {
+    for (var y = 0; y < this.ysize; y++) {
       callback(x, y, this.cells[x][y]);
     }
   }
@@ -95,23 +96,24 @@ Grid.prototype.removeTile = function (tile) {
 };
 
 Grid.prototype.withinBounds = function (position) {
-  return position.x >= 0 && position.x < this.size &&
-         position.y >= 0 && position.y < this.size;
+  return position.x >= 0 && position.x < this.xsize &&
+         position.y >= 0 && position.y < this.ysize;
 };
 
 Grid.prototype.serialize = function () {
   var cellState = [];
 
-  for (var x = 0; x < this.size; x++) {
+  for (var x = 0; x < this.xsize; x++) {
     var row = cellState[x] = [];
 
-    for (var y = 0; y < this.size; y++) {
+    for (var y = 0; y < this.ysize; y++) {
       row.push(this.cells[x][y] ? this.cells[x][y].serialize() : null);
     }
   }
 
   return {
-    size: this.size,
+    xsize: this.xsize,
+    ysize: this.ysize,
     cells: cellState
   };
 };
