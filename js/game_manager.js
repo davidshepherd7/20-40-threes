@@ -1,5 +1,8 @@
-function GameManager(size, InputManager, Actuator, StorageManager) {
-  this.size           = size; // Size of the grid
+function GameManager(xsize, ysize, InputManager, Actuator, StorageManager) {
+  // Size of the grid
+  this.xsize           = xsize;
+  this.ysize           = ysize;
+
   this.inputManager   = new InputManager;
   this.storageManager = new StorageManager;
   this.actuator       = new Actuator;
@@ -37,14 +40,15 @@ GameManager.prototype.setup = function () {
 
   // Reload the game from a previous game if present
   if (previousState) {
-    this.grid        = new Grid(previousState.grid.size,
+    this.grid        = new Grid(previousState.grid.xsize,
+                                previousState.grid.ysize,
                                 previousState.grid.cells); // Reload grid
     this.score       = previousState.score;
     this.over        = previousState.over;
     this.won         = previousState.won;
     this.keepPlaying = previousState.keepPlaying;
   } else {
-    this.grid        = new Grid(this.size);
+    this.grid        = new Grid(this.xsize, this.ysize);
     this.score       = 0;
     this.over        = false;
     this.won         = false;
@@ -207,8 +211,10 @@ GameManager.prototype.getVector = function (direction) {
 GameManager.prototype.buildTraversals = function (vector) {
   var traversals = { x: [], y: [] };
 
-  for (var pos = 0; pos < this.size; pos++) {
+  for (var pos = 0; pos < this.xsize; pos++) {
     traversals.x.push(pos);
+    }
+  for (var pos = 0; pos < this.ysize; pos++) {
     traversals.y.push(pos);
   }
 
@@ -245,8 +251,8 @@ GameManager.prototype.tileMatchesAvailable = function () {
 
   var tile;
 
-  for (var x = 0; x < this.size; x++) {
-    for (var y = 0; y < this.size; y++) {
+  for (var x = 0; x < this.xsize; x++) {
+    for (var y = 0; y < this.ysize; y++) {
       tile = this.grid.cellContent({ x: x, y: y });
 
       if (tile) {
