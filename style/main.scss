@@ -336,28 +336,28 @@ hr {
   $limit: 11;
 
   // Colors for all 11 states, false = no special color
-  $special-colors: false false, // 2
-                   false false, // 4
-                   #f78e48 true, // 8
-                   #fc5e2e true, // 16
-                   #ff3333 true, // 32
-                   #ff0000 true, // 64
-                   false true, // 128
-                   false true, // 256
-                   false true, // 512
-                   false true, // 1024
-                   false true; // 2048
+  $special-colors: #ff0000 true 1, // 2
+                   #0000ff true 2, // 4
+                   #f78e48 true 3, // 8
+                   #fc5e2e true 6, // 16
+                   #ff3333 true 12, // 32
+                   #ff0000 true 24, // 64
+                   false true 48, // 128
+                   false true 96, // 256
+                   false true 192, // 512
+                   false true 384, // 1024
+                   false true 764; // 2048
+
 
   // Build tile colors
   @while $exponent <= $limit {
-    $power: pow($base, $exponent);
+    $nth-color: nth($special-colors, $exponent);
+    $power: nth($nth-color, 3); /* pow($base, $exponent); */
 
     &.tile-#{$power} .tile-inner {
       // Calculate base background color
       $gold-percent: ($exponent - 1) / ($limit - 1) * 100;
       $mixed-background: mix($tile-gold-color, $tile-color, $gold-percent);
-
-      $nth-color: nth($special-colors, $exponent);
 
       $special-background: nth($nth-color, 1);
       $bright-color: nth($nth-color, 2);

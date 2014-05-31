@@ -7,7 +7,9 @@ function GameManager(xsize, ysize, InputManager, Actuator, StorageManager) {
   this.storageManager = new StorageManager;
   this.actuator       = new Actuator;
 
-  this.startTiles     = 2;
+    this.fullDistanceMove = false;
+
+  this.startTiles     = 5;
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
@@ -72,7 +74,28 @@ GameManager.prototype.addStartTiles = function () {
 // Adds a tile in a random position
 GameManager.prototype.addRandomTile = function () {
   if (this.grid.cellsAvailable()) {
-    var value = Math.random() < 0.9 ? 2 : 4;
+      var r = Math.random();
+      var value;
+
+      // choose a valuee
+      if(r < 0.3) 
+      {
+          value = 1;
+      }
+      else if(r < 0.6)
+      {
+          value = 2;
+      }
+      else if(r < 0.9)
+      {
+          value = 3;
+      }
+      else
+      {
+          value = 6;
+      }
+      
+
     var tile = new Tile(this.grid.randomAvailableCell(), value);
 
     this.grid.insertTile(tile);
@@ -130,9 +153,43 @@ GameManager.prototype.moveTile = function (tile, cell) {
   tile.updatePosition(cell);
 };
 
+
+// Check if two tiles can be merged
+GameManager.prototype.canMerge = function (tile, next) {
+    var any_one_two = function (tile, next)
+    {
+        return tile.value === 1
+            || tile.value === 2
+            || next.value === 1
+            || next.value === 2;
+    };
+
+    if(!next)
+    {
+        return false;
+    }
+    else
+    {
+        if(any_one_two(tile, next))
+        {
+            return next && ((tile.value === 1 && next.value === 2)
+                            || (tile.value === 2 && next.value === 1))
+                && !next.mergedFrom;
+        }
+        else
+        {
+            return next && next.value === tile.value && !next.mergedFrom;
+        }
+    }
+};
+
+
 // Move tiles on the grid in the specified direction
 GameManager.prototype.move = function (direction) {
   // 0: up, 1: right, 2: down, 3: left
+
+  // We need to store "this" in a separate variable so that it can be used
+  // inside the forEach lambda functions, god I hate javascript already!
   var self = this;
 
   if (this.isGameTerminated()) return; // Don't do anything if the game's over
@@ -153,12 +210,20 @@ GameManager.prototype.move = function (direction) {
       tile = self.grid.cellContent(cell);
 
       if (tile) {
-        var positions = self.findFarthestPosition(cell, vector);
+          var positions;
+          if(self.fullDistanceMove)
+          {
+              positions = self.findFarthestPosition(cell, vector);
+          }
+          else
+          {
+              positions = self.shiftOne(cell, vector);
+          }
         var next      = self.grid.cellContent(positions.next);
 
         // Only one merger per row traversal?
-        if (next && next.value === tile.value && !next.mergedFrom) {
-          var merged = new Tile(positions.next, tile.value * 2);
+        if (self.canMerge(tile, next)) {
+          var merged = new Tile(positions.next, tile.value + next.value);
           merged.mergedFrom = [tile, next];
 
           self.grid.insertTile(merged);
@@ -241,6 +306,28 @@ GameManager.prototype.findFarthestPosition = function (cell, vector) {
   };
 };
 
+GameManager.prototype.shiftOne = function (cell, vector) {
+    var oldposition = cell;
+    var newposition = { x: cell.x + vector.x, y: cell.y + vector.y };
+
+    if(this.grid.withinBounds(newposition) 
+       && this.grid.cellAvailable(newposition))
+        {
+            // Progress one step in the vector direction
+            return {
+                farthest: newposition,
+                next: newposition // Used to check if a merge is required
+            };
+        }
+    else
+        {
+            return {
+                farthest: oldposition,
+                next: newposition
+                };
+        }
+};
+
 GameManager.prototype.movesAvailable = function () {
   return this.grid.cellsAvailable() || this.tileMatchesAvailable();
 };
@@ -262,7 +349,7 @@ GameManager.prototype.tileMatchesAvailable = function () {
 
           var other  = self.grid.cellContent(cell);
 
-          if (other && other.value === tile.value) {
+          if (this.canMerge(tile, other)) {
             return true; // These two tiles can be merged
           }
         }
