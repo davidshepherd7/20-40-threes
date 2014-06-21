@@ -1,3 +1,4 @@
+/*jslint indent: 2 */
 "use strict";
 
 // Wait till the browser is ready to render the game (avoids glitches)
