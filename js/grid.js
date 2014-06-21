@@ -50,7 +50,10 @@ Grid.prototype.availableCells = function () {
 
   this.eachCell(function (x, y, tile) {
     if (!tile) {
-      cells.push({ x: x, y: y });
+      cells.push({
+        x: x,
+        y: y
+      });
     }
   });
 
@@ -99,7 +102,7 @@ Grid.prototype.removeTile = function (tile) {
 
 Grid.prototype.withinBounds = function (position) {
   return position.x >= 0 && position.x < this.xsize &&
-         position.y >= 0 && position.y < this.ysize;
+    position.y >= 0 && position.y < this.ysize;
 };
 
 Grid.prototype.serialize = function () {
