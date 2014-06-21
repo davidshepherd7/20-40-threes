@@ -1,3 +1,5 @@
+"use strict";
+
 (function () {
   var lastTime = 0;
   var vendors = ['webkit', 'moz'];

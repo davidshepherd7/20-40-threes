@@ -1,3 +1,5 @@
+"use strict";
+
 function Grid(xsize, ysize, previousState) {
   this.xsize = xsize;
   this.ysize = ysize;

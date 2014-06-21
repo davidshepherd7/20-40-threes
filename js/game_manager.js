@@ -1,3 +1,5 @@
+"use strict";
+
 function GameManager(xsize, ysize, InputManager, Actuator, StorageManager) {
   // Size of the grid
   this.xsize           = xsize;
