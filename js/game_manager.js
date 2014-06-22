@@ -1,4 +1,4 @@
-/*jslint indent: 2 */
+/*jshint browser: true */
 "use strict";
 
 function GameManager(xsize, ysize, InputManager, Actuator, StorageManager) {
