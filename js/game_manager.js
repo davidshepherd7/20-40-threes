@@ -158,17 +158,21 @@ GameManager.prototype.moveTile = function (tile, cell) {
 
 // Check if two tiles can be merged
 GameManager.prototype.canMerge = function (tile, next) {
-  var any_one_two = function (tile, next) {
-    return tile.value === 1 || tile.value === 2 || next.value === 1 || next.value === 2;
+  var anyOneTwo = function (tile, next) {
+      var values = [tile.value, next.value];
+      return Helpers.inArray(1, values) || Helpers.inArray(2, values); 
   };
 
-  if (!next) {
+  // Can't merge if there is no next tile or if we just merged from the
+  // next tile.
+  if (!next || next.mergedFrom) {
     return false;
   } else {
-    if (any_one_two(tile, next)) {
-      return next && ((tile.value === 1 && next.value === 2) || (tile.value === 2 && next.value === 1)) && !next.mergedFrom;
+    if (anyOneTwo(tile, next)) {
+      return ((tile.value === 1 && next.value === 2) ||
+              (tile.value === 2 && next.value === 1));
     } else {
-      return next && next.value === tile.value && !next.mergedFrom;
+        return next.value === tile.value;
     }
   }
 };
@@ -284,8 +288,8 @@ GameManager.prototype.buildTraversals = function (vector) {
   for (var pos = 0; pos < this.xsize; pos++) {
     traversals.x.push(pos);
   }
-  for (var pos = 0; pos < this.ysize; pos++) {
-    traversals.y.push(pos);
+  for (var ypos = 0; ypos < this.ysize; ypos++) {
+    traversals.y.push(ypos);
   }
 
   // Always traverse from the farthest cell in the chosen direction
@@ -321,8 +325,9 @@ GameManager.prototype.shiftOne = function (cell, vector) {
     y: cell.y + vector.y
   };
 
-  if (this.grid.withinBounds(newposition) && this.grid.cellAvailable(newposition)) {
-    // Progress one step in the vector direction
+  if (this.grid.withinBounds(newposition) &&
+      this.grid.cellAvailable(newposition)) {
+      // Progress one step in the vector direction
     return {
       farthest: newposition,
       next: newposition // Used to check if a merge is required
