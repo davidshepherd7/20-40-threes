@@ -1,4 +1,9 @@
 /*jshint browser: true */
+
+// included classes/namespaces
+/* global Grid */
+/* global Tile */
+
 "use strict";
 
 function GameManager(xsize, ysize, InputManager, Actuator, StorageManager) {

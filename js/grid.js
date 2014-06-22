@@ -1,4 +1,8 @@
 /*jshint browser: true */
+
+// includes:
+/* global Tile */
+
 "use strict";
 
 function Grid(xsize, ysize, previousState) {
