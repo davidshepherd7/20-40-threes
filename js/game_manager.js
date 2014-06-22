@@ -28,25 +28,25 @@ function GameManager(xsize, ysize, InputManager, Actuator, StorageManager) {
 }
 
 // Restart the game
-GameManager.prototype.restart = function () {
+GameManager.prototype.restart = function() {
   this.storageManager.clearGameState();
   this.actuator.continueGame(); // Clear the game won/lost message
   this.setup();
 };
 
 // Keep playing after winning (allows going over 2048)
-GameManager.prototype.keepPlaying = function () {
+GameManager.prototype.keepPlaying = function() {
   this.keepPlaying = true;
   this.actuator.continueGame(); // Clear the game won/lost message
 };
 
 // Return true if the game is lost, or has won and the user hasn't kept playing
-GameManager.prototype.isGameTerminated = function () {
+GameManager.prototype.isGameTerminated = function() {
   return this.over || (this.won && !this.keepPlaying);
 };
 
 // Set up the game
-GameManager.prototype.setup = function () {
+GameManager.prototype.setup = function() {
   var previousState = this.storageManager.getGameState();
 
   // Reload the game from a previous game if present
@@ -74,14 +74,14 @@ GameManager.prototype.setup = function () {
 };
 
 // Set up the initial tiles to start the game with
-GameManager.prototype.addStartTiles = function () {
+GameManager.prototype.addStartTiles = function() {
   for (var i = 0; i < this.startTiles; i++) {
     this.addRandomTile();
   }
 };
 
 // Adds a tile in a random position
-GameManager.prototype.addRandomTile = function () {
+GameManager.prototype.addRandomTile = function() {
   if (this.grid.cellsAvailable()) {
     var r = Math.random();
     var value;
@@ -99,13 +99,12 @@ GameManager.prototype.addRandomTile = function () {
 
 
     var tile = new Tile(this.grid.randomAvailableCell(), value);
-
     this.grid.insertTile(tile);
   }
 };
 
 // Sends the updated grid to the actuator
-GameManager.prototype.actuate = function () {
+GameManager.prototype.actuate = function() {
   if (this.storageManager.getBestScore() < this.score) {
     this.storageManager.setBestScore(this.score);
   }
@@ -128,7 +127,7 @@ GameManager.prototype.actuate = function () {
 };
 
 // Represent the current game as an object
-GameManager.prototype.serialize = function () {
+GameManager.prototype.serialize = function() {
   return {
     grid: this.grid.serialize(),
     score: this.score,
@@ -139,8 +138,8 @@ GameManager.prototype.serialize = function () {
 };
 
 // Save all tile positions and remove merger info
-GameManager.prototype.prepareTiles = function () {
-  this.grid.eachCell(function (x, y, tile) {
+GameManager.prototype.prepareTiles = function() {
+  this.grid.eachCell(function(x, y, tile) {
     if (tile) {
       tile.mergedFrom = null;
       tile.savePosition();
@@ -149,7 +148,7 @@ GameManager.prototype.prepareTiles = function () {
 };
 
 // Move a tile and its representation
-GameManager.prototype.moveTile = function (tile, cell) {
+GameManager.prototype.moveTile = function(tile, cell) {
   this.grid.cells[tile.x][tile.y] = null;
   this.grid.cells[cell.x][cell.y] = tile;
   tile.updatePosition(cell);
@@ -157,10 +156,10 @@ GameManager.prototype.moveTile = function (tile, cell) {
 
 
 // Check if two tiles can be merged
-GameManager.prototype.canMerge = function (tile, next) {
-  var anyOneTwo = function (tile, next) {
-      var values = [tile.value, next.value];
-      return Helpers.inArray(1, values) || Helpers.inArray(2, values); 
+GameManager.prototype.canMerge = function(tile, next) {
+  var anyOneTwo = function(tile, next) {
+    var values = [tile.value, next.value];
+    return Helpers.inArray(1, values) || Helpers.inArray(2, values);
   };
 
   // Can't merge if there is no next tile or if we just merged from the
@@ -170,16 +169,16 @@ GameManager.prototype.canMerge = function (tile, next) {
   } else {
     if (anyOneTwo(tile, next)) {
       return ((tile.value === 1 && next.value === 2) ||
-              (tile.value === 2 && next.value === 1));
+        (tile.value === 2 && next.value === 1));
     } else {
-        return next.value === tile.value;
+      return next.value === tile.value;
     }
   }
 };
 
 
 // Move tiles on the grid in the specified direction
-GameManager.prototype.move = function (direction) {
+GameManager.prototype.move = function(direction) {
   // 0: up, 1: right, 2: down, 3: left
 
   // We need to store "this" in a separate variable so that it can be used
@@ -198,8 +197,8 @@ GameManager.prototype.move = function (direction) {
   this.prepareTiles();
 
   // Traverse the grid in the right direction and move tiles
-  traversals.x.forEach(function (x) {
-    traversals.y.forEach(function (y) {
+  traversals.x.forEach(function(x) {
+    traversals.y.forEach(function(y) {
       cell = {
         x: x,
         y: y
@@ -254,7 +253,7 @@ GameManager.prototype.move = function (direction) {
 };
 
 // Get the vector representing the chosen direction
-GameManager.prototype.getVector = function (direction) {
+GameManager.prototype.getVector = function(direction) {
   // Vectors representing tile movement
   var map = {
     0: {
@@ -279,7 +278,7 @@ GameManager.prototype.getVector = function (direction) {
 };
 
 // Build a list of positions to traverse in the right order
-GameManager.prototype.buildTraversals = function (vector) {
+GameManager.prototype.buildTraversals = function(vector) {
   var traversals = {
     x: [],
     y: []
@@ -299,7 +298,7 @@ GameManager.prototype.buildTraversals = function (vector) {
   return traversals;
 };
 
-GameManager.prototype.findFarthestPosition = function (cell, vector) {
+GameManager.prototype.findFarthestPosition = function(cell, vector) {
   var previous;
 
   // Progress towards the vector direction until an obstacle is found
@@ -318,7 +317,7 @@ GameManager.prototype.findFarthestPosition = function (cell, vector) {
   };
 };
 
-GameManager.prototype.shiftOne = function (cell, vector) {
+GameManager.prototype.shiftOne = function(cell, vector) {
   var oldposition = cell;
   var newposition = {
     x: cell.x + vector.x,
@@ -326,8 +325,8 @@ GameManager.prototype.shiftOne = function (cell, vector) {
   };
 
   if (this.grid.withinBounds(newposition) &&
-      this.grid.cellAvailable(newposition)) {
-      // Progress one step in the vector direction
+    this.grid.cellAvailable(newposition)) {
+    // Progress one step in the vector direction
     return {
       farthest: newposition,
       next: newposition // Used to check if a merge is required
@@ -340,12 +339,12 @@ GameManager.prototype.shiftOne = function (cell, vector) {
   }
 };
 
-GameManager.prototype.movesAvailable = function () {
+GameManager.prototype.movesAvailable = function() {
   return this.grid.cellsAvailable() || this.tileMatchesAvailable();
 };
 
 // Check for available matches between tiles (more expensive check)
-GameManager.prototype.tileMatchesAvailable = function () {
+GameManager.prototype.tileMatchesAvailable = function() {
   var self = this;
 
   var tile;
@@ -378,6 +377,6 @@ GameManager.prototype.tileMatchesAvailable = function () {
   return false;
 };
 
-GameManager.prototype.positionsEqual = function (first, second) {
+GameManager.prototype.positionsEqual = function(first, second) {
   return first.x === second.x && first.y === second.y;
 };

@@ -1,7 +1,7 @@
 /*jshint browser: true */
 "use strict";
 
-(function () {
+(function() {
   if (typeof window.Element === "undefined" ||
     "classList" in document.documentElement) {
     return;
@@ -23,18 +23,18 @@
   }
 
   DOMTokenList.prototype = {
-    add: function (token) {
+    add: function(token) {
       if (this.contains(token)) return;
       push.call(this, token);
       this.el.className = this.toString();
     },
-    contains: function (token) {
+    contains: function(token) {
       return this.el.className.indexOf(token) != -1;
     },
-    item: function (index) {
+    item: function(index) {
       return this[index] || null;
     },
-    remove: function (token) {
+    remove: function(token) {
       if (!this.contains(token)) return;
       for (var i = 0; i < this.length; i++) {
         if (this[i] == token) break;
@@ -42,10 +42,10 @@
       splice.call(this, i, 1);
       this.el.className = this.toString();
     },
-    toString: function () {
+    toString: function() {
       return join.call(this, ' ');
     },
-    toggle: function (token) {
+    toggle: function(token) {
       if (!this.contains(token)) {
         this.add(token);
       } else {
@@ -68,7 +68,7 @@
     }
   }
 
-  defineElementGetter(HTMLElement.prototype, 'classList', function () {
+  defineElementGetter(HTMLElement.prototype, 'classList', function() {
     return new DOMTokenList(this);
   });
 })();
