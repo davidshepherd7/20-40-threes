@@ -2,12 +2,17 @@
 
 // included classes/namespaces
 /* global Helpers */
+/* global ValueGenerators */
 /* global Grid */
 /* global Tile */
 
 "use strict";
 
-function GameManager(xsize, ysize, InputManager, Actuator, StorageManager) {
+function GameManager(xsize, ysize,
+  InputManager,
+  Actuator,
+  StorageManager,
+  valuegenerator) {
   // Size of the grid
   this.xsize = xsize;
   this.ysize = ysize;
@@ -15,6 +20,10 @@ function GameManager(xsize, ysize, InputManager, Actuator, StorageManager) {
   this.inputManager = new InputManager;
   this.storageManager = new StorageManager;
   this.actuator = new Actuator;
+
+
+  this.generateValue = Helpers.defaultFor(valuegenerator,
+    ValueGenerators.randomThreesValue);
 
   this.fullDistanceMove = false;
 
@@ -83,24 +92,12 @@ GameManager.prototype.addStartTiles = function() {
 // Adds a tile in a random position
 GameManager.prototype.addRandomTile = function() {
   if (this.grid.cellsAvailable()) {
-    var r = Math.random();
-    var value;
-
-    // choose a valuee
-    if (r < 0.3) {
-      value = 1;
-    } else if (r < 0.6) {
-      value = 2;
-    } else if (r < 0.9) {
-      value = 3;
-    } else {
-      value = 6;
-    }
-
-
+    var value = this.generateValue();
     var tile = new Tile(this.grid.randomAvailableCell(), value);
     this.grid.insertTile(tile);
   }
+
+  // ??ds else throw?
 };
 
 // Sends the updated grid to the actuator
