@@ -127,3 +127,17 @@ Grid.prototype.serialize = function () {
     cells: cellState
   };
 };
+
+Grid.prototype.countTilesWithValue = function(testvalue) {
+  var count = 0;
+
+  for (var x = 0; x < this.xsize; x++) {
+    for (var y = 0; y < this.ysize; y++) {
+      var cell = this.cells[x][y];
+      if (cell && cell.value === testvalue) {
+        count++;
+      }
+    }
+  }
+  return count;
+};
