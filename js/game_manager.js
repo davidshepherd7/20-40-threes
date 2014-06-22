@@ -1,6 +1,7 @@
 /*jshint browser: true */
 
 // included classes/namespaces
+/* global Helpers */
 /* global Grid */
 /* global Tile */
 
