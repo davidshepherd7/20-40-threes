@@ -2,6 +2,17 @@
 
 var ValueGenerators = ValueGenerators || {};
 
+ValueGenerators.random2048Value = function() {
+    var r = Math.random();
+
+    if(r < 0.9) {
+        return 2;
+    }
+    else {
+        return 4;
+    }
+};
+
 
 ValueGenerators.semiRandomThreesValue = function() {
   var value;

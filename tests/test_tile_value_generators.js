@@ -24,6 +24,18 @@ var generalGeneratorTest = function(assert, vs) {
 };
 
 
+QUnit.test("random 2048 value generation", function( assert ) {
+    // generate list of values
+    var vs = [];
+    _.times(100,
+            function() {
+                vs.push(ValueGenerators.random2048Value());
+            });
+
+    generalGeneratorTest(assert, vs);
+});
+
+
 QUnit.test("random threes value generation", function( assert ) {
     // generate list of values
     var vs = [];
