@@ -7,7 +7,6 @@
 /* global GameManager */
 
 // And namespaces
-/* global Helpers */
 /* global ValueGenerators */
 
 

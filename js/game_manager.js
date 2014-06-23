@@ -3,6 +3,9 @@
 // included classes/namespaces
 /* global Helpers */
 /* global ValueGenerators */
+/* global _ */
+
+
 /* global Grid */
 /* global Tile */
 
@@ -156,7 +159,7 @@ GameManager.prototype.moveTile = function(tile, cell) {
 GameManager.prototype.canMerge = function(tile, next) {
   var anyOneTwo = function(tile, next) {
     var values = [tile.value, next.value];
-    return Helpers.inArray(1, values) || Helpers.inArray(2, values);
+    return _.contains(values, 1) || _.contains(values, 2);
   };
 
   // Can't merge if there is no next tile or if we just merged from the
