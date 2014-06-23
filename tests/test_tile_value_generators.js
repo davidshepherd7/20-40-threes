@@ -21,8 +21,6 @@ var generalGeneratorTest = function(assert, vs) {
 
     assert.ok(_.all(_.map(vs, isPositive)), "values positive");
     assert.ok(_.all(_.map(vs, isInt)), "integer value");
-    assert.ok(_.contains(vs, 1), "At least one 1 generated");
-    assert.ok(_.contains(vs, 2), "At least one 2 generated");
 };
 
 
