@@ -1,6 +1,14 @@
 /*jshint browser: true */
 "use strict";
 
+// A dummy version of the class for testing
+/* exported DummyKeyboardInputManager */ 
+function DummyKeyboardInputManager() 
+{
+    // Do nothing
+    this.on = function() {};
+}
+
 function KeyboardInputManager() {
   this.events = {};
 

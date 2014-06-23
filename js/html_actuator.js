@@ -1,6 +1,12 @@
 /*jshint browser: true */
 "use strict";
 
+// Dummy version for testing
+/* exported DummyHTMLActuator */ 
+function DummyHTMLActuator() {
+    this.actuate = function() {};
+}
+
 function HTMLActuator() {
   this.tileContainer = document.querySelector(".tile-container");
   this.scoreContainer = document.querySelector(".score-container");

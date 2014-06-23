@@ -12,17 +12,17 @@
 "use strict";
 
 function GameManager(xsize, ysize,
-  InputManager,
-  Actuator,
-  StorageManager,
+  inputManager,
+  actuator,
+  storageManager,
   valuegenerator) {
   // Size of the grid
   this.xsize = xsize;
   this.ysize = ysize;
 
-  this.inputManager = new InputManager;
-  this.storageManager = new StorageManager;
-  this.actuator = new Actuator;
+  this.inputManager = inputManager;
+  this.storageManager = storageManager;
+  this.actuator = actuator;
 
 
   this.generateValue = Helpers.defaultFor(valuegenerator,
