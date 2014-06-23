@@ -9,16 +9,16 @@ ValueGenerators.semiRandomThreesValue = function() {
 
   // choose a value which is more likely to be 1 if there are
   // lots of 2s and vice versa.
-  var oneCount = this.grid.countTilesWithValue(1);
-  var twoCount = this.grid.countTilesWithValue(2);
+  var n1 = this.grid.countTilesWithValue(1);
+  var n2 = this.grid.countTilesWithValue(2);
 
   var pmax = 0.6;
   var pOne = ValueGenerators.
-        semiRandomThreesFunctionGenerator(0.0, pmax, 4)(twoCount - oneCount);
+        semiRandomThreesFunctionGenerator(0.0, pmax, 4)(n1, n2);
 
   if (r < pOne) {
     value = 1;
-  } else if (r < pmax) {
+  } else if (r < pmax) { // pTwo = pmax - pOne
     value = 2;
   } else if (r < 0.9) {
     value = 3;
@@ -29,20 +29,21 @@ ValueGenerators.semiRandomThreesValue = function() {
   return value;
 };
 
-// Generate a function
+// Generate a function to generate values depending on the difference
+// between the number of 1s and 2s.
 ValueGenerators.semiRandomThreesFunctionGenerator =
     function (p1min, p1max, nrange) {
-        return function (n1minusn2) {
+        return function (n1, n2) {
             // if outside the range then return the corresponding maximum
-            if(Math.abs(n1minusn2) >= nrange) {
+            if(Math.abs(n1 - n2) >= nrange) {
 
                 // lots of 1s, low prob of generating another 1
-                if(n1minusn2 > 0) {
+                if(n1 > n2) {
                     return p1min;
                 }
 
                 // lots of 2s, high prob of generating a 1
-                else if(n1minusn2 < 0) {
+                else if(n1 < n2) {
                     return p1max;
                 }
                 else {
@@ -53,7 +54,7 @@ ValueGenerators.semiRandomThreesFunctionGenerator =
             // otherwise use a linear function of n1minusn2
             else {
                 var k = (p1min + p1max)/(2*nrange);
-                return -n1minusn2 * k + (p1min + p1max)/2;
+                return (n2 - n1) * k + (p1min + p1max)/2;
             }
         };
     };

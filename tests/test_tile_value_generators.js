@@ -59,18 +59,18 @@ QUnit.test("semi-random threes probability function", function( assert ) {
     var f = ValueGenerators.
         semiRandomThreesFunctionGenerator(p1min, p1max, nrange);
 
-    assert.deepEqual(f(100), p1min, "Extreme minimum value ok");
-    assert.deepEqual(f(nrange), p1min, "Minimum value ok");
-    assert.ok((f(nrange-1) - p1min) < 0.2, "Near min value ok");
+    assert.deepEqual(f(100, 1), p1min, "Extreme minimum value ok");
+    assert.deepEqual(f(nrange, 0), p1min, "Minimum value ok");
+    assert.ok((f(nrange-1, 0) - p1min) < 0.2, "Near min value ok");
 
 
-    assert.deepEqual(f(-100), p1max, "Extreme maximum value ok");
-    assert.deepEqual(f(-nrange), p1max, "Maximum value ok");
-    assert.ok((f(-nrange+1) - p1max) < 0.2, "Near max value ok");
+    assert.deepEqual(f(1, 100), p1max, "Extreme maximum value ok");
+    assert.deepEqual(f(0, nrange), p1max, "Maximum value ok");
+    assert.ok((f(0, nrange-1) - p1max) < 0.2, "Near max value ok");
 
 
 
-    assert.ok(f(0) < p1max, "Intermediate value < max");
-    assert.ok(f(0) > p1min, "Intermediate value > min");
+    assert.ok(f(3, 3) < p1max, "Intermediate value < max");
+    assert.ok(f(3, 3) > p1min, "Intermediate value > min");
 
 });
